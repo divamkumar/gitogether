@@ -7,18 +7,14 @@ app = Flask(__name__)
 def hello_world():
     return "<p>Hello, World!</p>"
 
-import http.client
+import requests
 def foo():
-    conn = http.client.HTTPSConnection("api.github.com")
+    url = "https://api.github.com/users/divankumar/repos"
 
     payload = ""
 
-    dataGit = conn.request("GET", "/users/divamkumar/repos", payload)
+    response = requests.request("GET", url, data=payload)
 
-    res = conn.getresponse()
-    data = res.read()
-
-    #print(data.decode("utf-8"))
-    return dataGit.json()
+    return response
 
 print(foo())
