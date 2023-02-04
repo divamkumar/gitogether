@@ -15,7 +15,7 @@ A new way to meet hackathon partners.
 - Usage 2
 
 ## Authors
-[Adam]
-[Gavin]
-[Divam Kumar](https://github.com/divamkumar)
-[Sean]
+- [Adam]
+- [Gavin]
+- [Divam Kumar](https://github.com/divamkumar)
+- [Sean]
