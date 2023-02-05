@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+// import ReactDOM from 'react-dom/client';
 
 export default function Auth(props) {
 
@@ -20,7 +21,24 @@ export default function Auth(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    alert(inputs);
+    // alert(inputs);
+
+    var formdata = new FormData()
+
+    formdata.append("fullname", inputs.fullname)
+    formdata.append("username", inputs.username)
+    formdata.append("password", inputs.password)
+
+    var requestOptions = {
+      method: 'POST',
+      body: formdata,
+      redirect: 'follow'
+    };
+
+    fetch("http://127.0.0.1:5000/"+authMode, requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
   }
 
   if (authMode === "signin") {
@@ -74,9 +92,9 @@ export default function Auth(props) {
 
   return (
     <div className="Auth-form-container">
-      <form className="Auth-form">
+      <form className="Auth-form" onSubmit={handleSubmit}>
         <div className="Auth-form-content">
-          <h3 className="Auth-form-title">Sign In</h3>
+          <h3 className="Auth-form-title">Sign Up</h3>
           <div className="text-center">
             Already registered?{" "}
             <span className="link-primary" onClick={changeAuthMode}>
@@ -86,25 +104,34 @@ export default function Auth(props) {
           <div className="form-group mt-3">
             <label>Full Name</label>
             <input
-              type="email"
-              className="form-control mt-1"
+              type="text"
+              name="fullname"
               placeholder="e.g Jane Doe"
+              value={inputs.fullname || ""}
+              onChange={handleChange}
+              className="form-control mt-1"
             />
           </div>
           <div className="form-group mt-3">
             <label>GitHub Username</label>
             <input
-              type="username"
-              className="form-control mt-1"
+              type="text"
+              name="username"
               placeholder="GitHub Username"
+              value={inputs.username || ""} 
+              onChange={handleChange}
+              className="form-control mt-1"
             />
           </div>
           <div className="form-group mt-3">
             <label>Password</label>
             <input
               type="password"
-              className="form-control mt-1"
+              name="password"
               placeholder="Gitogether Password"
+              value={inputs.password || ""} 
+              onChange={handleChange}
+              className="form-control mt-1"
             />
           </div>
           <div className="d-grid gap-2 mt-3">

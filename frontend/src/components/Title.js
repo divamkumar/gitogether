@@ -2,11 +2,11 @@ import React from 'react'
 
 export default function Title() {
   return (
-    <div class="hero-unit">
-        <h1>Gitogether</h1>
+    <div className="hero-unit">
+        <h1 id="titleLogo">Git<span id="ogether">ogether</span></h1>
         <p>A new way to find a compatible hackathon partner.</p>
         <p>
-            <a class="btn btn-primary btn-large">
+            <a href="#" className="btn btn-primary btn-large">
             Learn more
             </a>
         </p>
