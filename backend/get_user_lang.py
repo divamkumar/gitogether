@@ -38,5 +38,3 @@ def get_user_languages(username):
     langs_sorted = [user_langs[i] for i in occurrences_sorted ]
 
     return ', '.join(langs_sorted)
-
-print(get_user_languages('hello'))
