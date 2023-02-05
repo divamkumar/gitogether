@@ -1,11 +1,9 @@
-from flask import Flask
-import json
-from flask import request
-from flask_cors import CORS
+import os
 import psycopg2
 from get_user_lang import get_user_languages #used in new_user()
 
 # Create a cursor.
+# pg_conn_string = os.environ["PG_CONN_STRING"]
 pg_conn_string = "postgresql://sean:YO33pJN_JINPFMD6k5CIzg@hackroach-4895.6wr.cockroachlabs.cloud:26257/defaultdb?sslmode=verify-full"
 connection = psycopg2.connect(pg_conn_string)
 
@@ -43,11 +41,11 @@ def print_database_logistics():
 
     print("Contents of users:\t", end='')
     cursor.execute("SELECT * FROM users")
-    print(cursor.fetchone())
+    print(cursor.fetchall())
 
     print("Contents of matches:\t", end='')
     cursor.execute("SELECT * FROM matches")
-    print(cursor.fetchone())
+    print(cursor.fetchall())
 
 
 #Add new user in 'user' table
@@ -88,43 +86,3 @@ def delete_match(username1, username2):
 def get_matches(username) -> list:
     cursor.execute("SELECT * FROM matches WHERE username1=%s OR username2=%s", (username,))
     return cursor.fetchall()
-
-
-
-app = Flask(__name__)
-CORS(app)
-
-
-current_user_fullname_db = "Divam Kumar"
-current_user_username_db = "divamkumar"
-current_user_password_db = "asdf"
-
-curfullname = None
-curusername = None
-curpassword = None
-
-
-@app.route('/', methods=['GET', 'POST'])
-def opening_page():
-    if request.method  == 'GET':
-        return '<p>This is a GET request!</p>'
-    elif request.method == 'POST':
-        return "<p>POST</p>"
-    else:
-        return '<p>INALID</p>'
-
-@app.route('/signin', methods=['POST'])
-def signin():
-    # return request.form['username'] + " " + request.form['password']
-    # if request.form['username'] != current_user_username_db:
-    #     if request.form['password'] != current_user_password_db:
-    #         return 200
-    #     return 401
-    # else:
-    #     return 401 
-    return "200"
-        
-
-@app.route('/signup', methods=['POST'])
-def signup():
-    return request.form['fullname'] + ' ' + request.form['username'] + " " + request.form['password']
