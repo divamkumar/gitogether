@@ -4,11 +4,11 @@ import Auth from "./Auth";
 
 function OpeningPage() {
     return (
-        <div class="PageWrapper row">
-            <div class="col-lg-6">
+        <div className="PageWrapper row">
+            <div className="col-lg-6">
                 <Title/>
             </div>
-            <div class="col-lg-6">
+            <div className="col-lg-6">
                 <Auth/>
             </div>
         </div>

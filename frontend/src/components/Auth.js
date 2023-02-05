@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+// import ReactDOM from 'react-dom/client';
 
 export default function Auth(props) {
 
@@ -21,6 +22,16 @@ export default function Auth(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     alert(inputs);
+
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+
+    fetch("http://127.0.0.1:5000/", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
   }
 
   if (authMode === "signin") {
@@ -74,7 +85,7 @@ export default function Auth(props) {
 
   return (
     <div className="Auth-form-container">
-      <form className="Auth-form">
+      <form className="Auth-form" >
         <div className="Auth-form-content">
           <h3 className="Auth-form-title" onClick={changeAuthMode}>Sign Up</h3>
           <div className="text-center">
