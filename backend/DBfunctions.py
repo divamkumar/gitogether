@@ -41,11 +41,11 @@ def print_database_logistics():
 
     print("Contents of users:\t", end='')
     cursor.execute("SELECT * FROM users")
-    print(cursor.fetchone())
+    print(cursor.fetchall())
 
     print("Contents of matches:\t", end='')
     cursor.execute("SELECT * FROM matches")
-    print(cursor.fetchone())
+    print(cursor.fetchall())
 
 
 #Add new user in 'user' table
@@ -61,83 +61,28 @@ def new_user(username, fullname, password):
     connection.commit()
 
 
+#Remove user from the 'user' table
+def delete_user(username):
+    cursor.execute("DELETE FROM users WHERE username=%s", (username,))
+    connection.commit()
+
+
 def get_user_by_username(username) -> tuple:
     cursor.execute("SELECT * FROM users WHERE username = %s ", (username, ))
     return cursor.fetchone()
 
-# Insert data into a table.
-def insert_data():
-    cursor.execute(
-        "INSERT INTO courses VALUES (default, 'Distributed Systems', 'ece', 454, 1.5)"
-    )
-    cursor.execute(
-        "INSERT INTO courses (name, program, code) VALUES ('Databases', 'cs', 348)"
-    )
-    cursor.execute(
-        "INSERT INTO courses (name, program, code, credits) VALUES ('Programming for Performance', 'ece', 459, 1)"
-    )
+
+#insert a new match pairing into table 'matches'
+def new_match(username1, username2):
+    cursor.execute("INSERT INTO matches VALUES (%s, %s)", (username1, username2))
     connection.commit()
 
-# Update data in a table.
-def update_rows():
-    cursor.execute("UPDATE courses SET program = 'ECE' where program = 'ece'")
-    cursor.execute("UPDATE courses SET program = 'CS' where program = 'cs'")
+
+def delete_match(username1, username2):
+    cursor.execute("DELETE FROM matches WHERE username1=%s AND username2=%s", (username1, username2))
     connection.commit()
 
-# Delete rows.
-def delete_rows():
-    cursor.execute("DELETE FROM courses WHERE code = 459")
-    connection.commit()
-
-def alter_table():
-    cursor.execute("ALTER TABLE courses DROP COLUMN credits")
-    connection.commit()
-
-    cursor.execute("ALTER TABLE courses ADD COLUMN credits INT DEFAULT 1")
-    connection.commit()
-
-# Query a table.
-def select_all():
-    cursor.execute("SELECT * FROM courses")
-    results = cursor.fetchall()
-    connection.commit()
-    print(results)
-    print('\n')
-
-def select_some_with_params():
-    cursor.execute("SELECT * FROM courses WHERE program = %s", ('ECE',))
-    results = cursor.fetchall()
-    connection.commit()
-    print(results)
-    print('\n')
-
-# Drop table.
-def drop_tables():
-    cursor.execute("DROP TABLE courses")
-    connection.commit()
-
-def add_course_with_params():
-    cursor.execute("INSERT INTO courses VALUES (default, %s, %s, %s, %s)",
-                   ("Algorithms", "CS", "341", 1))
-    connection.commit()
-
-def add_course_with_named_params():
-  data = {
-    'name': 'Programming for Performance',
-    'code': '459',
-    'program': 'ECE',
-  }
-  cursor.execute("INSERT INTO courses VALUES (default, %(name)s, %(program)s, %(code)s)", data)
-
-if __name__=="__main__":
-    print("Now running intro_to_psycopg2.py as __main__")
-    create_tables()
-    
-# insert_data()
-# update_rows()
-# delete_rows()
-# alter_table()
-# add_course_with_params()
-# select_all()
-# select_some_with_params()
-# drop_tables()
+#get a list of all matches that include this user 'username'
+def get_matches(username) -> list:
+    cursor.execute("SELECT * FROM matches WHERE username1=%s OR username2=%s", (username,))
+    return cursor.fetchall()
