@@ -94,7 +94,7 @@ def delete_match(username1, username2):
 
 #get a list of all matches that include this user 'username'
 def get_matches(username) -> list:
-    cursor.execute("SELECT * FROM matches WHERE username1=%s OR username2=%s", (username,))
+    cursor.execute("SELECT * FROM matches WHERE username1=%s OR username2=%s", (username, username))
     return cursor.fetchall()
 
 
