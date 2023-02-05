@@ -1,20 +1,30 @@
 from flask import Flask
 import json
+from flask import request
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
 
-import requests
-def foo():
-    url = "https://api.github.com/users/divankumar/repos"
+current_user_name = None
+current_user_profile = None
+current_github_data = None
 
-    payload = ""
 
-    response = requests.request("GET", url, data=payload)
+@app.route('/', methods=['GET', 'POST'])
+def opening_page():
+    if request.method  == 'GET':
+        return '<p>This is a GET request!</p>'
+    elif request.method == 'POST':
+        return "<p>POST</p>"
+    else:
+        return '<p>INALID</p>'
 
-    return response
+@app.route('/signin', methods=['POST'])
+def signin():
+    return request.form['username'] + " " + request.form['password']
 
-print(foo())
+@app.route('/signup', methods=['POST'])
+def signup():
+    return request.form['fullname'] + ' ' + request.form['username'] + " " + request.form['password']
