@@ -37,6 +37,7 @@ def create_tables():
 
 #prints all tables in database
 def print_database_logistics():
+    print("=="*15)
     print("tables...\t", end='')
     cursor.execute("SHOW TABLES")
     print(cursor.fetchall())
@@ -57,9 +58,16 @@ def new_user(username, fullname, password):
     #retrieve this user's used language through api.github.com --> str
     languages = get_user_languages(username)
 
-    cursor.execute(
-        "INSERT INTO users VALUES (%s, %s, %s, %s)", (username, fullname, password, languages)
-    )
+    #insert user into table 'users'
+    cursor.execute("INSERT INTO users VALUES (%s, %s, %s, %s)", (username, fullname, password, languages))
+
+    #find every valid match currently in db and insert them and new user as a pair into table 'matches'
+    cursor.execute("SELECT username, languages FROM users WHERE username!=%s",(username,))
+    potentialMatches = cursor.fetchall()
+    for partner in potentialMatches:
+        if compare_languages(languages, partner[1]):
+            new_match(username, partner[0])
+
     connection.commit()
 
 
@@ -80,14 +88,23 @@ def new_match(username1, username2):
     connection.commit()
 
 
+#delete a SINGLE match from table 'matches'
 def delete_match(username1, username2):
     cursor.execute("DELETE FROM matches WHERE username1=%s AND username2=%s", (username1, username2))
     connection.commit()
+
 
 #get a list of all matches that include this user 'username'
 def get_matches(username) -> list:
     cursor.execute("SELECT * FROM matches WHERE username1=%s OR username2=%s", (username,))
     return cursor.fetchall()
+
+
+#removes a user from database completely. Removes all instances from tables 'users' and 'matches'
+def delete_user_completely(username):
+    cursor.execute("DELETE FROM users WHERE username=%s", (username,))
+    cursor.execute("DELETE FROM matches WHERE username1=%s OR username2=%s", (username, username))
+    connection.commit()
 
 
 
