@@ -1,7 +1,11 @@
 import React, { useState } from "react"
+import { resolvePath, Navigate } from "react-router-dom"
+
 // import ReactDOM from 'react-dom/client';
 
 export default function Auth(props) {
+  // const navigate = useNavigate();
+  const [authenticated, setauthenticated] = useState(null)
 
   // Signin/Signup toggle functions
   let [authMode, setAuthMode] = useState("signin")
@@ -21,7 +25,6 @@ export default function Auth(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // alert(inputs);
 
     var formdata = new FormData()
 
@@ -36,13 +39,26 @@ export default function Auth(props) {
     };
 
     fetch("http://127.0.0.1:5000/"+authMode, requestOptions)
-      .then(response => response.text())
-      .then(result => console.log(result))
+      .then(response => {
+        return response.text()
+        // if (response === "200") {
+        //   console.log(response);
+        //   // localStorage.setItem("authenticated", true)
+        //   // navigate("/dashboard");
+        // }
+        // console.log(response)
+      })
+      .then(result => {
+        if (result === "200") {
+          // localStorage.setItem("authenticated", true)
+          setauthenticated(true)
+        } else alert("fuck") 
+      })
       .catch(error => console.log('error', error));
   }
 
   if (authMode === "signin") {
-    return (
+    return authenticated ?  <Navigate replace to="/dashboard" /> : (
       <div className="Auth-form-container">
         <form className="Auth-form" onSubmit={handleSubmit}>
           <div className="Auth-form-content">

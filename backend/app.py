@@ -6,9 +6,13 @@ app = Flask(__name__)
 CORS(app)
 
 
-current_user_name = None
-current_user_profile = None
-current_github_data = None
+current_user_fullname_db = "Divam Kumar"
+current_user_username_db = "divamkumar"
+current_user_password_db = "asdf"
+
+curfullname = None
+curusername = None
+curpassword = None
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -22,8 +26,25 @@ def opening_page():
 
 @app.route('/signin', methods=['POST'])
 def signin():
-    return request.form['username'] + " " + request.form['password']
+    # return request.form['username'] + " " + request.form['password']
+    # if request.form['username'] != current_user_username_db:
+    #     if request.form['password'] != current_user_password_db:
+    #         return 200
+    #     return 401
+    # else:
+    #     return 401 
+    return "200"
+        
 
 @app.route('/signup', methods=['POST'])
 def signup():
-    return request.form['fullname'] + ' ' + request.form['username'] + " " + request.form['password']
+    # return request.form['fullname'] + ' ' + request.form['username'] + " " + request.form['password']
+    return "201"
+
+@app.route('/getuser', methods=['GET'])
+def get_user():
+    pass
+
+@app.route('/judgeuser', methods=['POST'])
+def judgeuser():
+    pass
