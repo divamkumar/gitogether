@@ -41,11 +41,11 @@ def print_database_logistics():
 
     print("Contents of users:\t", end='')
     cursor.execute("SELECT * FROM users")
-    print(cursor.fetchone())
+    print(cursor.fetchall())
 
     print("Contents of matches:\t", end='')
     cursor.execute("SELECT * FROM matches")
-    print(cursor.fetchone())
+    print(cursor.fetchall())
 
 
 #Add new user in 'user' table
@@ -61,9 +61,31 @@ def new_user(username, fullname, password):
     connection.commit()
 
 
+#Remove user from the 'user' table
+def delete_user(username):
+    cursor.execute("DELETE FROM users WHERE username=%s", (username,))
+    connection.commit()
+
+
 def get_user_by_username(username) -> tuple:
     cursor.execute("SELECT * FROM users WHERE username = %s ", (username, ))
     return cursor.fetchone()
+
+
+#insert a new match pairing into table 'matches'
+def new_match(username1, username2):
+    cursor.execute("INSERT INTO matches VALUES (%s, %s)", (username1, username2))
+    connection.commit()
+
+
+def delete_match(username1, username2):
+    cursor.execute("DELETE FROM matches WHERE username1=%s AND username2=%s", (username1, username2))
+    connection.commit()
+
+#get a list of all matches that include this user 'username'
+def get_matches(username) -> list:
+    cursor.execute("SELECT * FROM matches WHERE username1=%s OR username2=%s", (username,))
+    return cursor.fetchall()
 
 # Insert data into a table.
 def insert_data():
