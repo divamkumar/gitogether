@@ -1,6 +1,6 @@
 import os
 import psycopg2
-import requests #used in new_user()
+from get_user_lang import get_user_languages #used in new_user()
 
 # Create a cursor.
 # pg_conn_string = os.environ["PG_CONN_STRING"]
@@ -10,11 +10,13 @@ connection = psycopg2.connect(pg_conn_string)
 cursor = connection.cursor()
 
 
+# Create and 'use' database
 def set_database():
     cursor.execute("CREATE DATABASE IF NOT EXISTS gitTogether")
     cursor.execute("USE gitTogether")
 
-# Create a table
+
+# Create tables for gitTogether
 def create_tables():
     cursor.execute("CREATE TABLE IF NOT EXISTS users ( \
     username STRING PRIMARY KEY, \
@@ -30,6 +32,7 @@ def create_tables():
     )")
     connection.commit()
 
+
 #prints all tables in database
 def print_database_logistics():
     print("tables...\t", end='')
@@ -44,23 +47,21 @@ def print_database_logistics():
     cursor.execute("SELECT * FROM matches")
     print(cursor.fetchone())
 
+
 #Add new user in 'user' table
 def new_user(username, fullname, password):
     #Required: username is git username
     #primary key on username
+    #retrieve this user's used language through api.github.com --> str
+    languages = get_user_languages(username)
 
-    #TODO: implement fetch langauges for username
-    #call to api.github
-    url = f"https://api.github.com/{username}"
-    response = requests.request("GET", url, data=payload)
-    # --> languages
-    languages = "Python C Go"
     cursor.execute(
         "INSERT INTO users VALUES (%s, %s, %s, %s)", (username, fullname, password, languages)
     )
     connection.commit()
 
-def get_user_by_username(username):
+
+def get_user_by_username(username) -> tuple:
     cursor.execute("SELECT * FROM users WHERE username = %s ", (username, ))
     return cursor.fetchone()
 
